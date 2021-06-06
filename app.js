@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const { GetAuthorizationHeader } = require('./lib/auth')
+const freewayLists = require('./public/json/freewayList.json')
 
 const PORT = process.env.PORT
 
@@ -19,27 +20,31 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs')
 
 app.get('/', (req, res) => {
-  res.render('index')
+  res.render('index', { freewayLists })
 })
 
-app.get('/traffic', (req, res) => {
-  async function getData() {
-    try {
-      const data = await axios.get('https://traffic.transportdata.tw/MOTC/v2/Road/Traffic/Live/News/Freeway?$top=1&$format=JSON?$top=30&$format=JSON', {
-        headers: GetAuthorizationHeader()
-      })
+app.get('/sections/traffic', async (req, res) => {
+  try {
+    let trafficInformation = ''
 
-      fs.appendFile('./logs/res.txt', JSON.stringify(data.data) + '\n', err => {
-        if (err) console.error(err)
-      })
+    const data = await axios.get('https://traffic.transportdata.tw/MOTC/v2/Road/Traffic/Section/Freeway?$select=SectionName%2C%20SectionMile&$format=JSON', {
+      headers: GetAuthorizationHeader()
+    })
 
-      console.log(data.data)
-    } catch (error) {
-      console.error(error)
-    }
+    fs.appendFile('./logs/res.txt', JSON.stringify(data.data) + '\n', err => {
+      if (err) console.error(err)
+    })
+
+    trafficInformation = data.data
+
+
+    res.render('index', { freewayLists })
+
+  } catch (error) {
+    console.error(error)
   }
 
-  getData()
+})
 
 app.get('/sections', async (req, res) => {
   const roadNameInUTF8 = encodeURI(req.query.freeway)

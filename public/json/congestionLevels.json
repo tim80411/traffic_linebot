@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "Level": 1,
+      "LevelName": "順暢",
+      "LowValue": 80
+    },
+    {
+      "Level": 2,
+      "LevelName": "車多",
+      "TopValue": 79,
+      "LowValue": 60
+    },
+    {
+      "Level": 3,
+      "LevelName": "車多",
+      "TopValue": 59,
+      "LowValue": 40
+    },
+    {
+      "Level": 4,
+      "LevelName": "壅塞",
+      "TopValue": 39,
+      "LowValue": 20
+    },
+    {
+      "Level": 5,
+      "LevelName": "壅塞",
+      "TopValue": 19,
+      "LowValue": 0
+    }
+  ]
+}
