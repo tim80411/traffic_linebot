@@ -41,7 +41,21 @@ app.get('/traffic', (req, res) => {
 
   getData()
 
-  res.redirect('/')
+app.get('/sections', async (req, res) => {
+  const roadNameInUTF8 = encodeURI(req.query.freeway)
+
+  try {
+    // TODO：可以從API要起始位置資料
+    const data = await axios.get(`https://traffic.transportdata.tw/MOTC/v2/Road/Traffic/Section/Freeway?$select=RoadName%2CSectionName%20&$filter=contains(RoadName%2C'${roadNameInUTF8}')&$format=JSON`, {
+      headers: GetAuthorizationHeader()
+    })
+
+    const sectionLists = data.data.Sections
+    res.render('index', { freewayLists, sectionLists })
+
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 app.listen(PORT, () => {
